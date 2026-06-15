@@ -1,0 +1,179 @@
+{
+  "meta": {
+    "name": "splunk_app",
+    "displayName": "Equine Energy Add-on",
+    "version": "1.0.0",
+    "restRoot": "splunk_app",
+    "schemaVersion": "0.0.9",
+    "checkForUpdates": false
+  },
+  "pages": {
+    "configuration": {
+      "title": "Configuration",
+      "description": "Set up your Equine Energy account and add-on settings.",
+      "tabs": [
+        {
+          "name": "account",
+          "title": "Account",
+          "table": {
+            "header": [
+              {
+                "field": "name",
+                "label": "Account name"
+              },
+              {
+                "field": "api_url",
+                "label": "API URL"
+              }
+            ],
+            "actions": [
+              "edit",
+              "delete",
+              "clone"
+            ]
+          },
+          "entity": [
+            {
+              "type": "text",
+              "field": "name",
+              "label": "Account name",
+              "required": true,
+              "help": "A unique name for this Equine Energy account.",
+              "validators": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 50
+                },
+                {
+                  "type": "regex",
+                  "pattern": "^[a-zA-Z0-9_-]+$",
+                  "errorMsg": "Account name may only contain letters, numbers, underscores and hyphens."
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "field": "api_url",
+              "label": "API URL",
+              "required": true,
+              "defaultValue": "https://energyapi.splunk.engineer/getUsage",
+              "help": "The Equine Energy API endpoint to poll.",
+              "validators": [
+                {
+                  "type": "url"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "field": "api_key",
+              "label": "API Key",
+              "required": true,
+              "encrypted": true,
+              "help": "The x-api-key value used to authenticate to the Equine Energy API.",
+              "validators": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "loggingTab"
+        },
+        {
+          "type": "proxyTab"
+        }
+      ]
+    },
+    "inputs": {
+      "title": "Inputs",
+      "description": "Manage data inputs that collect Equine Energy usage data.",
+      "table": {
+        "header": [
+          {
+            "field": "name",
+            "label": "Name"
+          },
+          {
+            "field": "account",
+            "label": "Account"
+          },
+          {
+            "field": "interval",
+            "label": "Interval"
+          },
+          {
+            "field": "index",
+            "label": "Index"
+          },
+          {
+            "field": "disabled",
+            "label": "Status"
+          }
+        ],
+        "actions": [
+          "edit",
+          "delete",
+          "clone"
+        ]
+      },
+      "services": [
+        {
+          "name": "equine_energy",
+          "title": "Equine Energy Usage",
+          "entity": [
+            {
+              "type": "text",
+              "field": "name",
+              "label": "Name",
+              "required": true,
+              "help": "A unique name for this data input.",
+              "validators": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                {
+                  "type": "regex",
+                  "pattern": "^[a-zA-Z0-9_-]+$",
+                  "errorMsg": "Input name may only contain letters, numbers, underscores and hyphens."
+                }
+              ]
+            },
+            {
+              "type": "singleSelect",
+              "field": "account",
+              "label": "Account",
+              "required": true,
+              "help": "The Equine Energy account to use for this input.",
+              "options": {
+                "referenceName": "account"
+              }
+            },
+            {
+              "type": "interval",
+              "field": "interval",
+              "label": "Interval",
+              "required": true,
+              "defaultValue": "300",
+              "help": "Polling interval in seconds (or a cron schedule)."
+            },
+            {
+              "type": "index",
+              "field": "index",
+              "label": "Index",
+              "required": true,
+              "defaultValue": "default"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
